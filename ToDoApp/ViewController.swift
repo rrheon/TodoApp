@@ -54,7 +54,7 @@ class ViewController: UIViewController {
         let btn = UIButton()
         btn.setTitle("Sign Up", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.backgroundColor = .systemGray2
+        btn.backgroundColor = UIColor(red: 0.81, green: 0.80, blue: 0.76, alpha: 1.00)
         btn.layer.cornerRadius = 15
         return btn
     }()
@@ -75,7 +75,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .systemGray6
+        self.view.backgroundColor = UIColor(red: 0.87, green: 0.86, blue: 0.82, alpha: 1.00)
         
         view.addSubview(emailTextField)
         view.addSubview(loginLabel)
