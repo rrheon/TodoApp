@@ -7,8 +7,8 @@
 
 import UIKit
 
-class RegisterViewController: UIViewController {
-
+final class RegisterViewController: UIViewController {
+    
     private let signUpLabel: UILabel = {
         let label = UILabel()
         label.text = "Sign Up"
@@ -16,15 +16,17 @@ class RegisterViewController: UIViewController {
         return label
     }()
     
-    private let emailTextField: UITextField = {
+    // MARK: - ID와 Password 입력칸구현
+    private lazy var emailTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
         tf.layer.cornerRadius = 15
         tf.backgroundColor = .white
+        tf.addLeftPadding()
         return tf
     }()
     
-    private let passwordTextField: UITextField = {
+    private lazy var passwordTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Password"
         tf.backgroundColor = .white
@@ -37,12 +39,12 @@ class RegisterViewController: UIViewController {
         tf.isSecureTextEntry = true
         tf.layer.cornerRadius = 15
         tf.clearsOnBeginEditing = false
-        tf.addTarget(self, action: #selector(ViewController.textFieldEditingChanged(_:)), for: .editingChanged)
-
+        tf.addLeftPadding()
         return tf
     }()
     
-    private let signUpButton: UIButton = {
+    // MARK: - Button 구현
+    private lazy var signUpButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("SIGN UP", for: .normal)
         btn.backgroundColor = UIColor(red: 0.20, green: 0.16, blue: 0.04, alpha: 1.00)
@@ -51,12 +53,11 @@ class RegisterViewController: UIViewController {
 
         return btn
     }()
-    
-    private let loginButton: UIButton = {
+
+    private lazy var loginButton: UIButton = {
         let btn = UIButton()
-        btn.setTitle("Log in", for: .normal)
-        btn.setTitleColor(.black, for: .normal)
-        btn.backgroundColor = UIColor(red: 0.81, green: 0.80, blue: 0.76, alpha: 1.00)
+        btn.setTitle("LOG IN", for: .normal)
+        btn.backgroundColor = UIColor(red: 0.20, green: 0.16, blue: 0.04, alpha: 1.00)
         btn.layer.cornerRadius = 15
         btn.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
 
@@ -66,16 +67,19 @@ class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(red: 0.87, green: 0.86, blue: 0.82, alpha: 1.00)
-        
-        view.addSubview(signUpLabel)
-        view.addSubview(emailTextField)
-        view.addSubview(passwordTextField)
-        view.addSubview(signUpButton)
-        view.addSubview(loginButton)
-
+        [
+            signUpLabel,
+            emailTextField,
+            passwordTextField,
+            signUpButton,
+            loginButton
+        ].forEach {
+            view.addSubview($0)
+        }
         makeUI()
+
     }
-    
+    // MARK: - layout 설정
     func makeUI(){
         signUpLabel.snp.makeConstraints { make in
             make.bottom.equalTo(emailTextField.snp.top).offset(-50)
@@ -108,14 +112,19 @@ class RegisterViewController: UIViewController {
             make.top.equalTo(signUpButton.snp.bottom).offset(20)
             make.width.equalToSuperview().multipliedBy(0.8)
             make.height.equalTo(50)
+            
         }
         
     }
-    
+
+    // MARK: - 메서드 구현
     @objc func loginButtonTapped(){
-        print("로그인버튼이 눌렸습니다")
-        
+        let nextVC = MainViewController()
+        let navController = UINavigationController(rootViewController: nextVC)
+        navController.modalPresentationStyle = .fullScreen
+        self.present(navController, animated: true, completion: nil)
     }
+
     
     @objc func registerButtonTapped(){
         let alert = UIAlertController(title: "등록하기", message: "계정을 등록하시겠습니까?", preferredStyle: .alert)
@@ -132,9 +141,6 @@ class RegisterViewController: UIViewController {
         present(alert, animated: true, completion: nil)
         
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-    }
+ 
  
 }
