@@ -4,7 +4,6 @@
 //
 //  Created by 최용헌 on 2023/04/11.
 //
-
 import UIKit
 
 final class RegisterViewController: UIViewController {
@@ -47,7 +46,7 @@ final class RegisterViewController: UIViewController {
     private lazy var signUpButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("SIGN UP", for: .normal)
-        btn.backgroundColor = UIColor(red: 0.20, green: 0.16, blue: 0.04, alpha: 1.00)
+        btn.backgroundColor = Color.loginButtonBackground.uiColor
         btn.layer.cornerRadius = 15
         btn.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
 
@@ -57,16 +56,23 @@ final class RegisterViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("LOG IN", for: .normal)
-        btn.backgroundColor = UIColor(red: 0.20, green: 0.16, blue: 0.04, alpha: 1.00)
+        btn.backgroundColor = Color.loginButtonBackground.uiColor
         btn.layer.cornerRadius = 15
         btn.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-
+    
         return btn
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(red: 0.87, green: 0.86, blue: 0.82, alpha: 1.00)
+        self.view.backgroundColor = Color.loginScreenBackground.uiColor
+        
+        setupLayout()
+        makeUI()
+    }
+    
+    // MARK: - view 계층 설정
+    func setupLayout(){
         [
             signUpLabel,
             emailTextField,
@@ -112,9 +118,7 @@ final class RegisterViewController: UIViewController {
             make.top.equalTo(signUpButton.snp.bottom).offset(20)
             make.width.equalToSuperview().multipliedBy(0.8)
             make.height.equalTo(50)
-            
         }
-        
     }
 
     // MARK: - 메서드 구현

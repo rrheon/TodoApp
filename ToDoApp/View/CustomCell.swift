@@ -7,12 +7,13 @@ final class CustomCell: UITableViewCell {
     
     // MARK: - cell 구성
     let priorityLabel: UILabel = {
-        let label = UILabel()
+        let label = BasePaddingLabel()
         label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         label.textColor = .black
         label.textAlignment = .center
         label.layer.cornerRadius = 8
         label.layer.masksToBounds = true
+        label.frame.size.width = 30
         return label
     }()
     
@@ -25,20 +26,23 @@ final class CustomCell: UITableViewCell {
     let deadlineLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor.darkGray
         return label
     }()
     
     let completedImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "checkmark.circle")
-        imageView.tintColor = UIColor.systemGreen
         return imageView
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        setupLayout()
+        makeUI()
+    }
+
+    // MARK: - view 계층
+    func setupLayout(){
         [
             priorityLabel,
             titleLabel,
@@ -47,15 +51,12 @@ final class CustomCell: UITableViewCell {
         ].forEach {
             self.addSubview($0)
         }
-        
-        makeUI()
-     
     }
     
+    // MARK: - layout 설정
     func makeUI(){
         priorityLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.leading.equalToSuperview().offset(16)
+            make.top.leading.equalToSuperview().offset(16)
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -79,6 +80,4 @@ final class CustomCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
 }

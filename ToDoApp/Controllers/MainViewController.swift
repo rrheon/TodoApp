@@ -6,8 +6,6 @@
 //
 import UIKit
 
-
-
 final class MainViewController: UIViewController, AddItemDelegate {
     // TableView에 사용될 데이터 모델
     var items = [Info]()
@@ -16,6 +14,8 @@ final class MainViewController: UIViewController, AddItemDelegate {
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.rowHeight = 120
+        tableView.register(CustomCell.self, forCellReuseIdentifier: CustomCell.cellId)
+
         return tableView
     }()
     
@@ -25,44 +25,57 @@ final class MainViewController: UIViewController, AddItemDelegate {
         self.title = "ToDoList"
         self.view.backgroundColor = .white
     
-  
         // TableView 설정
-        tableView.register(CustomCell.self, forCellReuseIdentifier: CustomCell.cellId)
         tableView.delegate = self
         tableView.dataSource = self
+
         view.addSubview(tableView)
         
-        // TableView Layout 설정
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
-        }
-        
-        // MARK: - navigationbar 설정
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(goToLoginVC))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addTableView))
-        
-      
-        // 데이터 모델 초기화
+        setNavigationbar()
+        setTableVeiwLayout()
+        exampleDataModles()
+    }
+    
+    // MARK: - 데이터 모델 초기화
+    func exampleDataModles(){
         items = [
-            Info(title:"1",priority: "High", memo: "item 1", date: "2023-04-28"),
-            Info(title:"2",priority: "Medium", memo: "item 2", date: "2023-04-29"),
-            Info(title:"3",priority: "Low", memo: "item 3", date: "2023-04-30")
+            Info(title:"1",priority: "High", memo: "item 1", date: "2023-04-28", isCompleted: false),
+            Info(title:"2",priority: "Medium", memo: "item 2", date: "2023-04-29", isCompleted: true),
+            Info(title:"3",priority: "Low", memo: "item 3", date: "2023-04-30", isCompleted: true)
         ]
     }
-    // MARK: - 메서드 설정
+    // MARK: - TableView Layout 설정
+    func setTableVeiwLayout(){
+        tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide)}
+    }
+    
+    // MARK: - navigationbar 설정
+    func setNavigationbar(){
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Log out",
+            style: .plain,
+            target: self,
+            action: #selector(goToLoginVC)
+        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "plus"),
+            style: .plain,
+            target: self,
+            action: #selector(addTableView)
+        )
+    }
+}
+
+// MARK: - 메서드 설정
+extension MainViewController {
     @objc fileprivate func goToLoginVC() {
         let loginVC = LoginViewController()
         self.navigationController?.pushViewController(loginVC, animated: true)
-        loginVC.modalPresentationStyle = .fullScreen
     }
     
     @objc fileprivate func addTableView() {
         let addItemVC = AddItemViewController()
         self.navigationController?.pushViewController(addItemVC, animated: true)
-        addItemVC.modalPresentationStyle = .fullScreen
         addItemVC.delegate = self
     }
 
@@ -78,17 +91,44 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
-
+    
+    // MARK: - cell에 데이터 전달
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CustomCell.cellId, for: indexPath) as! CustomCell
         
-        // CustomCell에 데이터 전달
         cell.titleLabel.text = items[indexPath.row].title
         cell.deadlineLabel.text = items[indexPath.row].date
         cell.priorityLabel.text = items[indexPath.row].priority
-    
-        return cell
         
+        configureCompletedImageView(cell, items[indexPath.row].isCompleted)
+        configurePriorityLabel(cell, cell.priorityLabel.text!)
+        
+        return cell
+    }
+
+    // MARK: - completed 확인함수
+    func configureCompletedImageView(_ cell: CustomCell, _ isCompleted: Bool) {
+        if isCompleted {
+            cell.completedImageView.image = UIImage(systemName: "checkmark.circle")
+            cell.completedImageView.tintColor = UIColor.systemGreen
+        } else {
+            cell.completedImageView.image = UIImage(systemName: "checkmark.circle")
+            cell.completedImageView.tintColor = UIColor.red
+        }
+    }
+    
+    // MARK: - 우선순위확인함수
+    func configurePriorityLabel(_ cell: CustomCell, _ priority: String) {
+        switch priority {
+        case "Low":
+            cell.priorityLabel.backgroundColor = .green.withAlphaComponent(0.5)
+        case "Medium":
+            cell.priorityLabel.backgroundColor = .blue.withAlphaComponent(0.5)
+        case "High":
+            cell.priorityLabel.backgroundColor = .red.withAlphaComponent(0.5)
+        default:
+            break
+        }
     }
 
 }

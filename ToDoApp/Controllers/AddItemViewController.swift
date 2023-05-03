@@ -1,11 +1,14 @@
 import UIKit
+
 import SnapKit
 
-let priorityOptions = ["Low", "Medium", "High"]
+protocol AddItemDelegate: AnyObject {
+    func addItem(item: Info)
+}
 
 final class AddItemViewController: UIViewController {
     weak var delegate: AddItemDelegate?
-    
+        
     private let completedLabel: UILabel = {
         let label = UILabel()
         label.text = "Completed"
@@ -27,46 +30,42 @@ final class AddItemViewController: UIViewController {
         return label
     }()
     
-    private let deadLabel: UILabel = {
+    private let deadLineLabel: UILabel = {
         let label = UILabel()
         label.text = "Deadline"
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     
-    private let noteLabel: UILabel = {
+    private let memoLabel: UILabel = {
         let label = UILabel()
         label.text = "Note"
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     
-    private lazy var mySwitch : UISwitch = {
+    private lazy var completedSwitch: UISwitch = {
         let sw = UISwitch()
         sw.isOn = true
-        sw.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
         return sw
     }()
     
-    private let titleTextField : UITextField = {
+    private let titleTextField: UITextField = {
         let tf = UITextField()
-        tf.frame = CGRect(x: 20, y: 100, width: 200, height: 30)
         tf.placeholder = "제목을 입력하세요"
         tf.borderStyle = .roundedRect
         return tf
     }()
     
-    private let prioritySegmentedControl: UISegmentedControl = {
-        let items = ["Low", "Medium", "High"]
+    let priorityChoice: UISegmentedControl = {
+        let items = PriorityOptions.allCases.map { $0.rawValue }
         let segmentedControl = UISegmentedControl(items: items)
-        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.selectedSegmentIndex = 0
         return segmentedControl
     }()
     
     private let deadLineDatePicker: UIDatePicker = {
         let picker = UIDatePicker()
-        picker.frame = CGRect(x: 20, y: 150, width: 200, height: 30)
         picker.datePickerMode = .date
         picker.minimumDate = Date()
         return picker
@@ -76,7 +75,6 @@ final class AddItemViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "Enter memo"
         textField.borderStyle = .roundedRect
-        textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
@@ -84,33 +82,43 @@ final class AddItemViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addItem))
-        
+        setNavigationbar()
+        setupLayout()
+        makeUI()
+    }
+    // MARK: - navigationbar 설정
+    func setNavigationbar(){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(addItem))
+    }
+    // MARK: - view 계층 설정
+    func setupLayout(){
         [
             completedLabel,
             titleLabel,
             priorityLabel,
-            deadLabel,
-            noteLabel,
-            mySwitch,
-            prioritySegmentedControl,
+            deadLineLabel,
+            memoLabel,
+            completedSwitch,
+            priorityChoice,
             memoTextField,
             titleTextField,
             deadLineDatePicker
         ].forEach {
             view.addSubview($0)
         }
-        
-        makeUI()
     }
     
+    // MARK: - layout 설정
     func makeUI() {
         completedLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.leading.equalToSuperview().offset(20)
         }
         
-        mySwitch.snp.makeConstraints { make in
+        completedSwitch.snp.makeConstraints { make in
             make.top.equalTo(completedLabel)
             make.trailing.equalToSuperview().offset(-20)
         }
@@ -123,8 +131,7 @@ final class AddItemViewController: UIViewController {
         titleTextField.snp.makeConstraints { make in
             make.top.equalTo(titleLabel)
             make.trailing.equalToSuperview().offset(-20)
-            make.leading.equalTo(noteLabel).offset(50)
-            
+            make.leading.equalTo(memoLabel).offset(50)
         }
         
         priorityLabel.snp.makeConstraints { make in
@@ -132,67 +139,81 @@ final class AddItemViewController: UIViewController {
             make.leading.equalTo(titleLabel)
         }
         
-        prioritySegmentedControl.snp.makeConstraints { make in
+        priorityChoice.snp.makeConstraints { make in
             make.top.equalTo(priorityLabel)
             make.trailing.equalToSuperview().offset(-20)
         }
         
-        deadLabel.snp.makeConstraints { make in
+        deadLineLabel.snp.makeConstraints { make in
             make.top.equalTo(priorityLabel.snp.bottom).offset(20)
             make.leading.equalTo(titleLabel)
         }
         
         deadLineDatePicker.snp.makeConstraints { make in
-            make.top.equalTo(deadLabel)
+            make.top.equalTo(deadLineLabel)
             make.trailing.equalToSuperview().offset(-20)
-            make.leading.equalTo(deadLabel).offset(10)
+            make.leading.equalTo(deadLineLabel).offset(10)
         }
         
-        noteLabel.snp.makeConstraints { make in
-            make.top.equalTo(deadLabel.snp.bottom).offset(20)
+        memoLabel.snp.makeConstraints { make in
+            make.top.equalTo(deadLineLabel.snp.bottom).offset(20)
             make.leading.equalTo(titleLabel)
         }
         
-        
         memoTextField.snp.makeConstraints { make in
-            make.top.equalTo(noteLabel)
+            make.top.equalTo(memoLabel)
             make.trailing.equalToSuperview().offset(-20)
-            make.leading.equalTo(noteLabel).offset(50)
+            make.leading.equalTo(memoLabel).offset(50)
         }
-        
     }
-    
-    
+}
+
+// MARK: - 함수
+extension AddItemViewController {
     @objc func addItem() {
-        guard let title = titleTextField.text, !title.isEmpty else {
-            let alert = UIAlertController(title: "Error", message: "Please enter a title", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-            present(alert, animated: true, completion: nil)
-            return
-        }
-        guard let memo = memoTextField.text, !memo.isEmpty else {
-            let alert = UIAlertController(title: "Error", message: "Please enter a memo", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-            present(alert, animated: true, completion: nil)
-            return
-        }
-        let priority = priorityOptions[prioritySegmentedControl.selectedSegmentIndex]
-        let newItem = Info(title: title, priority: priority, memo: memo)
+        let newItem = Info(title: emptyCheck(titleTextField),
+                           priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue,
+                           memo: emptyCheck(memoTextField),
+                           date: convertDate(),
+                           isCompleted: switchChanged(completedSwitch))
+
         delegate?.addItem(item: newItem)
+
         navigationController?.popViewController(animated: true)
     }
     
-    
-    @objc func switchChanged(_ sender: UISwitch) {
+    // MARK: - 공백확인 함수
+    func emptyCheck(_ textField: UITextField) -> (String) {
+        guard let info = textField.text, !info.isEmpty else {
+            let alert = UIAlertController(title: "Error",
+                                          message: "Please enter some information",
+                                          preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            present(alert, animated: true, completion: nil)
+            return "No infomation"
+        }
+        return info
+    }
+
+    // MARK: - 날짜 -> String 변환함수
+    func convertDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let deadLine = dateFormatter.string(from: deadLineDatePicker.date)
+        return deadLine
+    }
+
+    // MARK: - 스위치 true/false 전달함수
+    func switchChanged(_ sender: UISwitch) -> Bool {
         if sender.isOn {
-            print("on")
+            return true
         } else {
-            print("off")
+            return false
         }
     }
-    
 }
-
 
 
 #if DEBUG

@@ -5,12 +5,10 @@
 //  Created by 최용헌 on 2023/04/08.
 //
 import UIKit
+
 import SnapKit
 
-// final 지정해주는 이유
 final class LoginViewController: UIViewController {
-    // 코드 유지 보수할 때 편하게 작성할것, mark로 구역 나누기
-    // private let으로 설정해주는 이유
     private let loginLabel: UILabel = {
         let label = UILabel()
         label.text = "Log In"
@@ -18,7 +16,6 @@ final class LoginViewController: UIViewController {
         return label
     }()
     
-    // private lazy 설정해주는 이유
     private lazy var emailTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
@@ -26,7 +23,6 @@ final class LoginViewController: UIViewController {
         tf.backgroundColor = .white
         tf.addLeftPadding()
         tf.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
-
         return tf
     }()
     
@@ -45,46 +41,26 @@ final class LoginViewController: UIViewController {
         tf.clearsOnBeginEditing = false
         tf.addLeftPadding()
         tf.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
-
         return tf
     }()
     
-    // 로그인 버튼이 활성화 되는거 속성프로퍼티에 넣기 - 코드가 더 깔끔해짐
     private lazy var loginButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("LOG IN", for: .normal)
-        btn.backgroundColor = UIColor(red: 0.20, green: 0.16, blue: 0.04, alpha: 1.00)
+        btn.backgroundColor = Color.loginButtonBackground.uiColor
         btn.layer.cornerRadius = 15
+        btn.isEnabled = false
         btn.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-
         return btn
     }()
-//    private let loginButton: UIButton = {
-//        var config = UIButton.Configuration.filled()
-//        config.title = "LOG IN"
-//        let btn = UIButton(configuration: config)
-//        btn.configurationUpdateHandler = { btn in
-//            switch btn.state {
-//            case .normal:
-//                btn.configuration?.baseBackgroundColor = UIColor(red: 0.64, green: 0.53, blue: 0.32, alpha: 1.00)
-//            case .disabled:
-//                btn.configuration?.baseBackgroundColor = UIColor(red: 0.20, green: 0.16, blue: 0.04, alpha: 1.00)
-//            default: break
-//            }
-//        }
-//        btn.layer.cornerRadius = 15
-//        btn.clipsToBounds = true
-//        return btn
-//    }()
-//
+
     private lazy var registerButton: UIButton = {
         let btn = UIButton()
         btn.setTitle("Sign Up", for: .normal)
         btn.setTitleColor(.black, for: .normal)
-        btn.backgroundColor = UIColor(red: 0.81, green: 0.80, blue: 0.76, alpha: 1.00)
+        btn.backgroundColor = Color.registerButtonBackground.uiColor
         btn.layer.cornerRadius = 15
         btn.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
-
         return btn
     }()
     
@@ -93,7 +69,6 @@ final class LoginViewController: UIViewController {
         btn.setTitle("Forgot Password?", for: .normal)
         btn.setTitleColor(.black ,for: .normal)
         btn.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
-
         return btn
         
     }()
@@ -107,8 +82,14 @@ final class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = UIColor(red: 0.87, green: 0.86, blue: 0.82, alpha: 1.00)
+        self.view.backgroundColor = Color.loginScreenBackground.uiColor
         
+        setupLayout()
+        makeUI()
+    }
+    
+    // MARK: - view 계층 설정
+    func setupLayout(){
         [
             emailTextField,
             loginLabel,
@@ -120,11 +101,9 @@ final class LoginViewController: UIViewController {
         ].forEach {
             view.addSubview($0)
         }
-        
-        makeUI()
-        loginButton.isEnabled = false
     }
     
+    // MARK: - layout 설정
     func makeUI(){
         // 이메일 텍스트 필드 설정
         emailTextField.snp.makeConstraints { make in
@@ -179,15 +158,12 @@ final class LoginViewController: UIViewController {
         let nextVC = RegisterViewController()
         nextVC.modalPresentationStyle = .fullScreen
         self.present(nextVC, animated: true)
-        
     }
-
 
     @objc func loginButtonTapped(){
         let nextVC = MainViewController()
         nextVC.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(nextVC, animated: true)
-    //        self.present(nextVC, animated: true)
     }
     
     @objc func resetButtonTapped(){
@@ -203,7 +179,6 @@ final class LoginViewController: UIViewController {
         alert.addAction(cancel)
         
         present(alert, animated: true, completion: nil)
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -226,8 +201,7 @@ extension UITextField {
   }
 }
 
-// Delegate를 받고 있지 않음 확인해볼것, 창준형이 준 코드 살펴볼것 - 버튼 관려에 효율적
-extension LoginViewController{
+extension LoginViewController {
     @objc func textFieldEditingChanged(_ textField : UITextField) {
         if textField.text?.count == 1 {
             if textField.text?.first == " " {
@@ -238,11 +212,11 @@ extension LoginViewController{
         guard
             let email = emailTextField.text, !email.isEmpty,
             let password = passwordTextField.text, !password.isEmpty else {
-            loginButton.backgroundColor = UIColor(red: 0.20, green: 0.16, blue: 0.04, alpha: 1.00)
-            loginButton.isEnabled = false
+                loginButton.backgroundColor = Color.loginButtonBackground.uiColor
+                loginButton.isEnabled = false
             return
         }
-        loginButton.backgroundColor = UIColor(red: 0.64, green: 0.53, blue: 0.32, alpha: 1.00)
+        loginButton.backgroundColor = Color.loginButtonActiveBackground.uiColor
         loginButton.isEnabled = true
     }
     
