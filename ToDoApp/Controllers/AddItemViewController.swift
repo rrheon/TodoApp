@@ -3,244 +3,304 @@ import UIKit
 import SnapKit
 
 protocol AddItemDelegate: AnyObject {
-    func addItem(item: Info)
+  func addItem(item: Info)
 }
 
 final class AddItemViewController: UIViewController {
-    weak var delegate: AddItemDelegate?
-        
-    private let completedLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Completed"
-        label.font = UIFont.systemFont(ofSize: 16)
-        return label
-    }()
+  weak var delegate: AddItemDelegate?
+  
+  private let topImage: UIImageView = {
+    let view = UIImageView()
+    view.image = UIImage(named: "checklist")
     
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Title"
-        label.font = UIFont.systemFont(ofSize: 16)
-        return label
-    }()
+    return view
+  }()
+  
+  private let completedLabel: UILabel = {
+    let label = UILabel()
+    label.text = "Completed"
+    label.font = UIFont.systemFont(ofSize: 16)
+    return label
+  }()
+  
+  private let titleLabel: UILabel = {
+    let label = UILabel()
+    label.text = "Title"
+    label.font = UIFont.systemFont(ofSize: 16)
+    return label
+  }()
+  
+  private let priorityLabel: UILabel = {
+    let label = UILabel()
+    label.text = "Priority"
+    label.font = UIFont.systemFont(ofSize: 16)
+    return label
+  }()
+  
+  private let deadLineLabel: UILabel = {
+    let label = UILabel()
+    label.text = "Deadline"
+    label.font = UIFont.systemFont(ofSize: 16)
+    return label
+  }()
+  
+  private let memoLabel: UILabel = {
+    let label = UILabel()
+    label.text = "Note"
+    label.font = UIFont.systemFont(ofSize: 16)
+    return label
+  }()
+  
+  private lazy var completedSwitch: UISwitch = {
+    let sw = UISwitch()
+    sw.onTintColor = Color.priority.uiColor
+    return sw
+  }()
+  
+  private lazy var titleTextView: UITextView = {
+    let tv = UITextView()
+    tv.text = "제목을 입력하세요"
+    tv.textColor = UIColor.lightGray
+    tv.font = UIFont.systemFont(ofSize: 15)
+    tv.layer.borderWidth = 1.0
+    tv.layer.borderColor = UIColor.lightGray.cgColor
+    tv.layer.cornerRadius = 5.0
+    tv.adjustUITextViewHeight()
+    tv.delegate = self
+    return tv
+  }()
+  
+  
+  let priorityChoice: UISegmentedControl = {
+    let items = PriorityOptions.allCases.map { $0.rawValue }
+    let segmentedControl = UISegmentedControl(items: items)
+    segmentedControl.selectedSegmentIndex = 0
+    segmentedControl.selectedSegmentTintColor = Color.priority.uiColor
+    return segmentedControl
+  }()
+  
+  
+  private let deadLineDatePicker: UIDatePicker = {
+    let picker = UIDatePicker()
+    picker.datePickerMode = .date
+    picker.minimumDate = Date()
+    return picker
+  }()
+  
+  private lazy var memoTextView: UITextView = {
+    let tv = UITextView()
+    tv.text = "내용을 입력하세요"
+    tv.textColor = UIColor.lightGray
+    tv.font = UIFont.systemFont(ofSize: 15)
+    tv.layer.borderWidth = 1.0
+    tv.layer.borderColor = UIColor.lightGray.cgColor
+    tv.layer.cornerRadius = 5.0
+    tv.adjustUITextViewHeight()
+    tv.delegate = self
     
-    private let priorityLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Priority"
-        label.font = UIFont.systemFont(ofSize: 16)
-        return label
-    }()
+    return tv
+  }()
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
     
-    private let deadLineLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Deadline"
-        label.font = UIFont.systemFont(ofSize: 16)
-        return label
-    }()
+    view.backgroundColor = .white
     
-    private let memoLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Note"
-        label.font = UIFont.systemFont(ofSize: 16)
-        return label
-    }()
+    setNavigationbar()
+    setupLayout()
+    makeUI()
     
-    private lazy var completedSwitch: UISwitch = {
-        let sw = UISwitch()
-        sw.isOn = true
-        return sw
-    }()
-    
-    private let titleTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "제목을 입력하세요"
-        tf.borderStyle = .roundedRect
-        return tf
-    }()
-    
-    let priorityChoice: UISegmentedControl = {
-        let items = PriorityOptions.allCases.map { $0.rawValue }
-        let segmentedControl = UISegmentedControl(items: items)
-        segmentedControl.selectedSegmentIndex = 0
-        return segmentedControl
-    }()
-    
-    private let deadLineDatePicker: UIDatePicker = {
-        let picker = UIDatePicker()
-        picker.datePickerMode = .date
-        picker.minimumDate = Date()
-        return picker
-    }()
-    
-    private let memoTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Enter memo"
-        textField.borderStyle = .roundedRect
-        return textField
-    }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .white
-        setNavigationbar()
-        setupLayout()
-        makeUI()
+  }
+  // MARK: - navigationbar 설정
+  func setNavigationbar(){
+    navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"),
+                                                        style: .plain,
+                                                        target: self,
+                                                        action: #selector(addItem))
+  }
+  // MARK: - view 계층 설정
+  func setupLayout(){
+    [
+      completedLabel,
+      titleLabel,
+      priorityLabel,
+      deadLineLabel,
+      memoLabel,
+      completedSwitch,
+      priorityChoice,
+      memoTextView,
+      titleTextView,
+      deadLineDatePicker,
+      topImage
+    ].forEach {
+      view.addSubview($0)
     }
-    // MARK: - navigationbar 설정
-    func setNavigationbar(){
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"),
-                                                            style: .plain,
-                                                            target: self,
-                                                            action: #selector(addItem))
+  }
+  
+  // MARK: - layout 설정
+  private func makeUI() {
+    
+    topImage.snp.makeConstraints { make in
+      make.height.equalTo(100)
+      make.width.equalTo(view.safeAreaLayoutGuide)
+      make.centerX.equalToSuperview()
+      make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
     }
-    // MARK: - view 계층 설정
-    func setupLayout(){
-        [
-            completedLabel,
-            titleLabel,
-            priorityLabel,
-            deadLineLabel,
-            memoLabel,
-            completedSwitch,
-            priorityChoice,
-            memoTextField,
-            titleTextField,
-            deadLineDatePicker
-        ].forEach {
-            view.addSubview($0)
-        }
+    completedLabel.snp.makeConstraints { make in
+      make.centerY.equalTo(completedSwitch)
+      make.top.equalTo(topImage.snp.bottom).offset(20)
+      make.leading.equalToSuperview().offset(20)
     }
     
-    // MARK: - layout 설정
-    func makeUI() {
-        completedLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
-            make.leading.equalToSuperview().offset(20)
-        }
-        
-        completedSwitch.snp.makeConstraints { make in
-            make.top.equalTo(completedLabel)
-            make.trailing.equalToSuperview().offset(-20)
-        }
-        
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(completedLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-        }
-        
-        titleTextField.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel)
-            make.trailing.equalToSuperview().offset(-20)
-            make.leading.equalTo(memoLabel).offset(50)
-        }
-        
-        priorityLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
-            make.leading.equalTo(titleLabel)
-        }
-        
-        priorityChoice.snp.makeConstraints { make in
-            make.top.equalTo(priorityLabel)
-            make.trailing.equalToSuperview().offset(-20)
-        }
-        
-        deadLineLabel.snp.makeConstraints { make in
-            make.top.equalTo(priorityLabel.snp.bottom).offset(20)
-            make.leading.equalTo(titleLabel)
-        }
-        
-        deadLineDatePicker.snp.makeConstraints { make in
-            make.top.equalTo(deadLineLabel)
-            make.trailing.equalToSuperview().offset(-20)
-            make.leading.equalTo(deadLineLabel).offset(10)
-        }
-        
-        memoLabel.snp.makeConstraints { make in
-            make.top.equalTo(deadLineLabel.snp.bottom).offset(20)
-            make.leading.equalTo(titleLabel)
-        }
-        
-        memoTextField.snp.makeConstraints { make in
-            make.top.equalTo(memoLabel)
-            make.trailing.equalToSuperview().offset(-20)
-            make.leading.equalTo(memoLabel).offset(50)
-        }
+    completedSwitch.snp.makeConstraints { make in
+      make.top.equalTo(completedLabel)
+      make.trailing.equalToSuperview().offset(-20)
     }
+    
+    titleLabel.snp.makeConstraints { make in
+      make.centerY.equalTo(titleTextView)
+      make.top.equalTo(completedLabel.snp.bottom).offset(10)
+      make.leading.equalToSuperview().offset(20)
+    }
+    
+    titleTextView.snp.makeConstraints { make in
+      make.top.equalTo(titleLabel)
+      make.trailing.equalToSuperview().offset(-20)
+      make.leading.equalTo(titleLabel.snp.trailing).offset(10)
+    }
+    
+    priorityLabel.snp.makeConstraints { make in
+      make.centerY.equalTo(priorityChoice)
+      make.top.equalTo(titleTextView.snp.bottom).offset(10)
+      make.leading.equalTo(titleLabel)
+    }
+    
+    priorityChoice.snp.makeConstraints { make in
+      make.top.equalTo(titleTextView.snp.bottom).offset(10)
+      make.trailing.equalToSuperview().offset(-20)
+    }
+    
+    deadLineLabel.snp.makeConstraints { make in
+      make.centerY.equalTo(deadLineDatePicker)
+      make.top.equalTo(priorityLabel.snp.bottom).offset(10)
+      make.leading.equalTo(titleLabel)
+    }
+    
+    deadLineDatePicker.snp.makeConstraints { make in
+      make.top.equalTo(deadLineLabel)
+      make.trailing.equalToSuperview().offset(-20)
+      make.leading.equalTo(deadLineLabel).offset(10)
+    }
+    
+    memoLabel.snp.makeConstraints { make in
+      make.centerY.equalTo(memoTextView)
+      make.top.equalTo(deadLineLabel.snp.bottom).offset(10)
+      make.leading.equalTo(titleLabel)
+    }
+    
+    memoTextView.snp.makeConstraints { make in
+      make.top.equalTo(memoLabel)
+      make.trailing.equalToSuperview().offset(-20)
+      make.leading.equalTo(memoLabel.snp.trailing).offset(10)
+    }
+  }
 }
 
 // MARK: - 함수
 extension AddItemViewController {
-    @objc func addItem() {
-        let newItem = Info(title: emptyCheck(titleTextField),
-                           priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue,
-                           memo: emptyCheck(memoTextField),
-                           date: convertDate(),
-                           isCompleted: switchChanged(completedSwitch))
-
-        delegate?.addItem(item: newItem)
-
-        navigationController?.popViewController(animated: true)
-    }
+  @objc func addItem() {
+    let newItem = Info(title: emptyCheck(titleTextView),
+                       priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue,
+                       memo: emptyCheck(memoTextView),
+                       date: convertDate(),
+                       isCompleted: switchChanged(completedSwitch))
     
-    // MARK: - 공백확인 함수
-    func emptyCheck(_ textField: UITextField) -> (String) {
-        guard let info = textField.text, !info.isEmpty else {
-            let alert = UIAlertController(title: "Error",
-                                          message: "Please enter some information",
-                                          preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-            present(alert, animated: true, completion: nil)
-            return "No infomation"
-        }
-        return info
+    delegate?.addItem(item: newItem)
+    navigationController?.popViewController(animated: true)
+  }
+  
+  // MARK: - 공백확인 함수
+  func emptyCheck(_ textField: UITextView) -> (String) {
+    guard let info = textField.text, !info.isEmpty else {
+      let alert = UIAlertController(title: "Error",
+                                    message: "Please enter some information",
+                                    preferredStyle: .alert)
+      
+      alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+      present(alert, animated: true, completion: nil)
+      return "No infomation"
     }
-
-    // MARK: - 날짜 -> String 변환함수
-    func convertDate() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        let deadLine = dateFormatter.string(from: deadLineDatePicker.date)
-        return deadLine
+    return info
+  }
+  
+  // MARK: - 날짜 -> String 변환함수
+  func convertDate() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    
+    let deadLine = dateFormatter.string(from: deadLineDatePicker.date)
+    return deadLine
+  }
+  
+  // MARK: - 스위치 true/false 전달함수
+  func switchChanged(_ sender: UISwitch) -> Bool {
+    if sender.isOn {
+      return true
+    } else {
+      return false
     }
-
-    // MARK: - 스위치 true/false 전달함수
-    func switchChanged(_ sender: UISwitch) -> Bool {
-        if sender.isOn {
-            return true
-        } else {
-            return false
-        }
-    }
+  }
 }
 
+extension AddItemViewController: UITextViewDelegate {
+  func textViewDidBeginEditing(_ textView: UITextView) {
+    if textView.textColor == UIColor.lightGray {
+      textView.text = nil
+      textView.textColor = UIColor.black
+    }
+  }
+  
+  func textViewDidEndEditing(_ textView: UITextView) {
+    if textView.text.isEmpty {
+      textView.text = "내용을 입력하세요"
+      textView.textColor = UIColor.lightGray
+    }
+  }
+}
+
+extension UITextView {
+  func adjustUITextViewHeight() {
+    self.translatesAutoresizingMaskIntoConstraints = true
+    self.sizeToFit()
+    self.isScrollEnabled = false
+  }
+}
 
 #if DEBUG
 import SwiftUI
 struct ViewControllerRepresentable: UIViewControllerRepresentable {
-    
-    func updateUIViewController(_ uiView: UIViewController,context: Context) {
-        // leave this empty
-    }
-    @available(iOS 13.0.0, *)
-    func makeUIViewController(context: Context) -> UIViewController{
-        AddItemViewController()
-    }
+  
+  func updateUIViewController(_ uiView: UIViewController,context: Context) {
+    // leave this empty
+  }
+  @available(iOS 13.0.0, *)
+  func makeUIViewController(context: Context) -> UIViewController{
+    AddItemViewController()
+  }
 }
 @available(iOS 13.0, *)
 struct ViewControllerRepresentable_PreviewProvider: PreviewProvider {
-    static var previews: some View {
-        Group {
-            if #available(iOS 14.0, *) {
-                ViewControllerRepresentable()
-                    .ignoresSafeArea()
-                    .previewDisplayName(/*@START_MENU_TOKEN@*/"Preview"/*@END_MENU_TOKEN@*/)
-                    .previewDevice(PreviewDevice(rawValue: "iPhone 11"))
-            } else {
-                // Fallback on earlier versions
-            }
-        }
-        
+  static var previews: some View {
+    Group {
+      if #available(iOS 14.0, *) {
+        ViewControllerRepresentable()
+          .ignoresSafeArea()
+          .previewDisplayName(/*@START_MENU_TOKEN@*/"Preview"/*@END_MENU_TOKEN@*/)
+          .previewDevice(PreviewDevice(rawValue: "iPhone 11"))
+      } else {
+        // Fallback on earlier versions
+      }
     }
+    
+  }
 } #endif

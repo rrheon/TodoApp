@@ -121,7 +121,7 @@ final class RegisterViewController: UIViewController {
         }
     }
 
-    // MARK: - 메서드 구현
+    // MARK: - button 메서드 구현
     @objc func loginButtonTapped(){
         let nextVC = MainViewController()
         let navController = UINavigationController(rootViewController: nextVC)
