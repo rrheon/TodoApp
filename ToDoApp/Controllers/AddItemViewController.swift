@@ -9,10 +9,11 @@ protocol AddItemDelegate: AnyObject {
 final class AddItemViewController: UIViewController {
   weak var delegate: AddItemDelegate?
   
+  var itemToEdit: Info?
+  
   private let topImage: UIImageView = {
     let view = UIImageView()
     view.image = UIImage(named: "checklist")
-    
     return view
   }()
   
@@ -71,7 +72,7 @@ final class AddItemViewController: UIViewController {
   }()
   
   
-  let priorityChoice: UISegmentedControl = {
+  var priorityChoice: UISegmentedControl = {
     let items = PriorityOptions.allCases.map { $0.rawValue }
     let segmentedControl = UISegmentedControl(items: items)
     segmentedControl.selectedSegmentIndex = 0
@@ -83,7 +84,6 @@ final class AddItemViewController: UIViewController {
   private let deadLineDatePicker: UIDatePicker = {
     let picker = UIDatePicker()
     picker.datePickerMode = .date
-    picker.minimumDate = Date()
     return picker
   }()
   
@@ -110,14 +110,34 @@ final class AddItemViewController: UIViewController {
     setupLayout()
     makeUI()
     
+    // 기존의 데이터 불러온거
+    if let itemToEdit = itemToEdit {
+      titleTextView.textColor = .black
+      memoTextView.textColor = .black
+      titleTextView.text = itemToEdit.title
+      memoTextView.text = itemToEdit.memo
+
+      let datestring = itemToEdit.date
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd"
+      if let date = dateFormatter.date(from: datestring) {
+          deadLineDatePicker.date = date
+      }
+
+      if let priorityOption = PriorityOptions(rawValue: itemToEdit.priority!) {
+        let selectedIndex = PriorityOptions.allCases.firstIndex(of: priorityOption) ?? 0
+        priorityChoice.selectedSegmentIndex = selectedIndex
+      }
+      completedSwitch.isOn = itemToEdit.isCompleted
+    }
   }
   // MARK: - navigationbar 설정
   func setNavigationbar(){
-    navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"),
-                                                        style: .plain,
+    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done,
                                                         target: self,
                                                         action: #selector(addItem))
   }
+  
   // MARK: - view 계층 설정
   func setupLayout(){
     [
@@ -162,11 +182,12 @@ final class AddItemViewController: UIViewController {
       make.top.equalTo(completedLabel.snp.bottom).offset(10)
       make.leading.equalToSuperview().offset(20)
     }
-    
+  
     titleTextView.snp.makeConstraints { make in
       make.top.equalTo(titleLabel)
       make.trailing.equalToSuperview().offset(-20)
       make.leading.equalTo(titleLabel.snp.trailing).offset(10)
+      make.width.equalTo(300)
     }
     
     priorityLabel.snp.makeConstraints { make in
@@ -202,6 +223,7 @@ final class AddItemViewController: UIViewController {
       make.top.equalTo(memoLabel)
       make.trailing.equalToSuperview().offset(-20)
       make.leading.equalTo(memoLabel.snp.trailing).offset(10)
+      make.width.equalTo(300)
     }
   }
 }
@@ -233,6 +255,7 @@ extension AddItemViewController {
     return info
   }
   
+
   // MARK: - 날짜 -> String 변환함수
   func convertDate() -> String {
     let dateFormatter = DateFormatter()
