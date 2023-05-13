@@ -4,6 +4,7 @@ import SnapKit
 
 protocol AddItemDelegate: AnyObject {
   func addItem(item: Info)
+  func editItem(item: Info)
 }
 
 final class AddItemViewController: UIViewController {
@@ -60,7 +61,7 @@ final class AddItemViewController: UIViewController {
   
   private lazy var titleTextView: UITextView = {
     let tv = UITextView()
-    tv.text = "제목을 입력하세요"
+//    tv.text = "제목을 입력하세요"
     tv.textColor = UIColor.lightGray
     tv.font = UIFont.systemFont(ofSize: 15)
     tv.layer.borderWidth = 1.0
@@ -89,7 +90,7 @@ final class AddItemViewController: UIViewController {
   
   private lazy var memoTextView: UITextView = {
     let tv = UITextView()
-    tv.text = "내용을 입력하세요"
+//    tv.text = "내용을 입력하세요"
     tv.textColor = UIColor.lightGray
     tv.font = UIFont.systemFont(ofSize: 15)
     tv.layer.borderWidth = 1.0
@@ -109,8 +110,10 @@ final class AddItemViewController: UIViewController {
     setNavigationbar()
     setupLayout()
     makeUI()
-    
-    // 기존의 데이터 불러온거
+    checkData()
+  }
+  
+  func checkData(){
     if let itemToEdit = itemToEdit {
       titleTextView.textColor = .black
       memoTextView.textColor = .black
@@ -230,16 +233,36 @@ final class AddItemViewController: UIViewController {
 
 // MARK: - 함수
 extension AddItemViewController {
+  // mainviewcontroller 말고 delegate로 하는거로 바꿔보기
   @objc func addItem() {
-    let newItem = Info(title: emptyCheck(titleTextView),
-                       priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue,
-                       memo: emptyCheck(memoTextView),
-                       date: convertDate(),
-                       isCompleted: switchChanged(completedSwitch))
+      guard let mainViewController = delegate as? MainViewController else { return }
+      
+    let titleIsEmpty = emptyCheck(titleTextView).isEmpty
+    let memoIsEmpty = emptyCheck(memoTextView).isEmpty
     
-    delegate?.addItem(item: newItem)
-    navigationController?.popViewController(animated: true)
+    if titleIsEmpty || memoIsEmpty { return
+}
+      
+      if let itemToEdit = self.itemToEdit {
+          let editedItem = Info(id: itemToEdit.id,
+                                title: emptyCheck(titleTextView),
+                                priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue,
+                                memo: emptyCheck(memoTextView),
+                                date: convertDate(),
+                                isCompleted: switchChanged(completedSwitch))
+          mainViewController.editItem(item: editedItem)
+      } else {
+          let newItem = Info(id: mainViewController.tableView.rowsCount + 1,
+                              title: emptyCheck(titleTextView),
+                              priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue,
+                              memo: emptyCheck(memoTextView),
+                              date: convertDate(),
+                              isCompleted: switchChanged(completedSwitch))
+          mainViewController.addItem(item: newItem)
+      }
+      navigationController?.popViewController(animated: true)
   }
+
   
   // MARK: - 공백확인 함수
   func emptyCheck(_ textField: UITextView) -> (String) {
@@ -250,7 +273,7 @@ extension AddItemViewController {
       
       alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
       present(alert, animated: true, completion: nil)
-      return "No infomation"
+      return ""
     }
     return info
   }
@@ -276,6 +299,7 @@ extension AddItemViewController {
 }
 
 extension AddItemViewController: UITextViewDelegate {
+  
   func textViewDidBeginEditing(_ textView: UITextView) {
     if textView.textColor == UIColor.lightGray {
       textView.text = nil

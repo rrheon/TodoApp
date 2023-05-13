@@ -168,7 +168,9 @@ final class LoginViewController: UIViewController {
   }
   
   @objc func resetButtonTapped(){
-    let alert = UIAlertController(title: "비밀번호 바꾸기", message: "비밀번호를 바꾸시겠습니까?", preferredStyle: .alert)
+    let alert = UIAlertController(title: "비밀번호 바꾸기",
+                                  message: "비밀번호를 바꾸시겠습니까?",
+                                  preferredStyle: .alert)
     let success = UIAlertAction(title: "확인", style: .default){ action in
       print("확인버튼이 눌렸습니다.")
     }

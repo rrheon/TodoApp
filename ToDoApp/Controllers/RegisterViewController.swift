@@ -48,7 +48,9 @@ final class RegisterViewController: UIViewController {
         btn.setTitle("SIGN UP", for: .normal)
         btn.backgroundColor = Color.loginButtonBackground.uiColor
         btn.layer.cornerRadius = 15
-        btn.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
+        btn.addTarget(self,
+                      action: #selector(registerButtonTapped),
+                      for: .touchUpInside)
 
         return btn
     }()
@@ -58,7 +60,9 @@ final class RegisterViewController: UIViewController {
         btn.setTitle("LOG IN", for: .normal)
         btn.backgroundColor = Color.loginButtonBackground.uiColor
         btn.layer.cornerRadius = 15
-        btn.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        btn.addTarget(self,
+                      action: #selector(loginButtonTapped),
+                      for: .touchUpInside)
     
         return btn
     }()
@@ -131,7 +135,9 @@ final class RegisterViewController: UIViewController {
 
     
     @objc func registerButtonTapped(){
-        let alert = UIAlertController(title: "등록하기", message: "계정을 등록하시겠습니까?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "등록하기",
+                                      message: "계정을 등록하시겠습니까?",
+                                      preferredStyle: .alert)
         let success = UIAlertAction(title: "확인", style: .default){ action in
             print("확인버튼이 눌렸습니다.")
         }
