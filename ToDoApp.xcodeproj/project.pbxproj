@@ -16,12 +16,14 @@
 		EE17E79129E4516000F4DA6D /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EE17E79029E4516000F4DA6D /* SnapKit */; };
 		EE17E79329E578A400F4DA6D /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E79229E578A400F4DA6D /* RegisterViewController.swift */; };
 		EE17E79629E57C0D00F4DA6D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E79529E57C0D00F4DA6D /* MainViewController.swift */; };
-		EE17E79A29E65FD000F4DA6D /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E79929E65FD000F4DA6D /* Info.swift */; };
 		EE51D0D92A03271F00B12CDC /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE51D0D82A03271F00B12CDC /* PaddingLabel.swift */; };
 		EE94DAFB29FFDDB90002D46F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE94DAFA29FFDDB90002D46F /* Color.swift */; };
 		EE94DAFD29FFF91F0002D46F /* Priority.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE94DAFC29FFF91F0002D46F /* Priority.swift */; };
 		EEAF594029F97856002E5E4E /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAF593F29F97856002E5E4E /* CustomCell.swift */; };
 		EEAF594229F98E69002E5E4E /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAF594129F98E69002E5E4E /* AddItemViewController.swift */; };
+		EEB3627C2A12695F002B7CD4 /* ToDoData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3627A2A12695F002B7CD4 /* ToDoData+CoreDataClass.swift */; };
+		EEB3627D2A12695F002B7CD4 /* ToDoData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3627B2A12695F002B7CD4 /* ToDoData+CoreDataProperties.swift */; };
+		EEB362802A126E42002B7CD4 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3627F2A126E42002B7CD4 /* CoreDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,12 +37,14 @@
 		EE17E78929E4513300F4DA6D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EE17E79229E578A400F4DA6D /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		EE17E79529E57C0D00F4DA6D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		EE17E79929E65FD000F4DA6D /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
 		EE51D0D82A03271F00B12CDC /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
 		EE94DAFA29FFDDB90002D46F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		EE94DAFC29FFF91F0002D46F /* Priority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Priority.swift; sourceTree = "<group>"; };
 		EEAF593F29F97856002E5E4E /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 		EEAF594129F98E69002E5E4E /* AddItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
+		EEB3627A2A12695F002B7CD4 /* ToDoData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToDoData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		EEB3627B2A12695F002B7CD4 /* ToDoData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ToDoData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		EEB3627F2A126E42002B7CD4 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,10 +80,10 @@
 			children = (
 				EE17E77829E4513200F4DA6D /* AppDelegate.swift */,
 				EE17E77A29E4513200F4DA6D /* SceneDelegate.swift */,
+				EE94DAF929FFDDA30002D46F /* Helpers */,
 				EE17E79829E57ECB00F4DA6D /* Models */,
 				EE17E79429E578AB00F4DA6D /* View */,
 				EE17E79729E57EB000F4DA6D /* Controllers */,
-				EE94DAF929FFDDA30002D46F /* Helpers */,
 				EE17E78429E4513300F4DA6D /* Assets.xcassets */,
 				EE17E78629E4513300F4DA6D /* LaunchScreen.storyboard */,
 				EE17E78929E4513300F4DA6D /* Info.plist */,
@@ -110,7 +114,9 @@
 		EE17E79829E57ECB00F4DA6D /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				EE17E79929E65FD000F4DA6D /* Info.swift */,
+				EEB3627B2A12695F002B7CD4 /* ToDoData+CoreDataProperties.swift */,
+				EEB3627A2A12695F002B7CD4 /* ToDoData+CoreDataClass.swift */,
+				EEB3627F2A126E42002B7CD4 /* CoreDataManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -204,9 +210,11 @@
 				EE51D0D92A03271F00B12CDC /* PaddingLabel.swift in Sources */,
 				EE17E77D29E4513200F4DA6D /* LoginViewController.swift in Sources */,
 				EE17E79329E578A400F4DA6D /* RegisterViewController.swift in Sources */,
+				EEB362802A126E42002B7CD4 /* CoreDataManager.swift in Sources */,
 				EE17E77929E4513200F4DA6D /* AppDelegate.swift in Sources */,
 				EE94DAFB29FFDDB90002D46F /* Color.swift in Sources */,
-				EE17E79A29E65FD000F4DA6D /* Info.swift in Sources */,
+				EEB3627D2A12695F002B7CD4 /* ToDoData+CoreDataProperties.swift in Sources */,
+				EEB3627C2A12695F002B7CD4 /* ToDoData+CoreDataClass.swift in Sources */,
 				EEAF594029F97856002E5E4E /* CustomCell.swift in Sources */,
 				EEAF594229F98E69002E5E4E /* AddItemViewController.swift in Sources */,
 				EE17E79629E57C0D00F4DA6D /* MainViewController.swift in Sources */,

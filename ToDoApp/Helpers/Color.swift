@@ -13,12 +13,8 @@ enum Color {
   case loginScreenBackground
   case loginButtonActiveBackground
   
-  case low
-  case medium
-  case high
-  
   case priority
-  
+
   var uiColor: UIColor {
     switch self {
     case .loginButtonBackground:
@@ -29,15 +25,9 @@ enum Color {
       return UIColor(red: 0.87, green: 0.86, blue: 0.82, alpha: 1.00)
     case .loginButtonActiveBackground:
       return UIColor(red: 0.64, green: 0.53, blue: 0.32, alpha: 1.00)
-    case .low:
-      return UIColor(red: 0.65, green: 0.94, blue: 0.68, alpha: 1.00)
-    case .medium:
-      return UIColor(red: 0.92, green: 0.78, blue: 0.51, alpha: 1.00)
-    case .high:
-      return UIColor(red: 0.94, green: 0.01, blue: 0.24, alpha: 1.00)
     case .priority:
       return UIColor(red: 0.53, green: 0.85, blue: 0.84, alpha: 1.00)
+
     }
   }
 }
-

@@ -5,6 +5,12 @@ final class CustomCell: UITableViewCell {
   // 해당 셀의 identifier 지정
   static let cellId = "CustomCell"
   
+  // ToDoData를 전달받을 변수
+  var toDoData: ToDoData? {
+      didSet {
+          configureUIwithData()
+      }
+  }
   // MARK: - cell 구성
   let priorityLabel: UILabel = {
     let label = BasePaddingLabel()
@@ -20,6 +26,7 @@ final class CustomCell: UITableViewCell {
   let titleLabel: UILabel = {
     let label = UILabel()
     label.font = UIFont(name: "HelveticaNeue-Bold", size: 18)
+    label.numberOfLines = 0
     return label
   }()
   
@@ -39,7 +46,6 @@ final class CustomCell: UITableViewCell {
     
     setupLayout()
     makeUI()
-    titleLabel.numberOfLines = 0
   }
   
   // MARK: - view 계층
@@ -76,6 +82,39 @@ final class CustomCell: UITableViewCell {
       make.trailing.equalToSuperview().offset(-16)
       make.centerY.equalTo(priorityLabel)
       make.width.height.equalTo(30)
+    }
+  }
+  
+  // MARK: - cell에 데이터 전달
+  func configureUIwithData() {
+    priorityLabel.text = toDoData?.priority
+    deadlineLabel.text = toDoData?.date
+    titleLabel.text = toDoData?.title
+    
+    configureCompletedImageView(toDoData?.isCompleted ?? false)
+    if let priorityOption = PriorityOptions(rawValue: priorityLabel.text ?? "") {
+      configurePriorityLabel(priorityOption)
+    }
+  }
+  // MARK: - completed 확인함수
+  func configureCompletedImageView(_ isCompleted: Bool) {
+    if isCompleted {
+      completedImageView.image = UIImage(systemName: "checkmark.circle")
+      completedImageView.tintColor = UIColor.systemGreen
+    } else {
+      completedImageView.image = nil
+    }
+  }
+  
+  // MARK: - 우선순위확인함수
+  func configurePriorityLabel( _ priority: PriorityOptions) {
+    switch priority {
+    case .low:
+      priorityLabel.backgroundColor = PriorityOptions.low.uicolor
+    case .medium:
+      priorityLabel.backgroundColor = PriorityOptions.medium.uicolor
+    case .high:
+      priorityLabel.backgroundColor = PriorityOptions.high.uicolor
     }
   }
   
