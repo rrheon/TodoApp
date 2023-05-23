@@ -195,14 +195,7 @@ final class LoginViewController: UIViewController {
   }
 }
 
-// MARK: - padding 추가함수
-extension UITextField {
-  func addLeftPadding() {
-    let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: self.frame.height))
-    self.leftView = paddingView
-    self.leftViewMode = ViewMode.always
-  }
-}
+
 // MARK: - ID, password 미입력 시 버튼 비활성화 함수
 extension LoginViewController {
   @objc func textFieldEditingChanged(_ textField : UITextField) {

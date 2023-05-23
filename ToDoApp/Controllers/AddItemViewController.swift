@@ -304,26 +304,8 @@ extension AddItemViewController: UITextViewDelegate {
     }
   }
 }
-// MARK: - 날짜 to String 변경
 
-extension Date {
-  func convertDateToString(date: Date) -> String {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd"
-    
-    let deadLine = dateFormatter.string(from: date)
-    return deadLine
-  }
-}
 
-// MARK: - 문자 길이에 따라 크기 증가
-extension UITextView {
-  func adjustUITextViewHeight() {
-    self.translatesAutoresizingMaskIntoConstraints = true
-    self.sizeToFit()
-    self.isScrollEnabled = false
-  }
-}
 
 
 // MARK: - Preview

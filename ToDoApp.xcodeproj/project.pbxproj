@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE0366BD2A1C4A5100F5C155 /* DateExtenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0366BC2A1C4A5100F5C155 /* DateExtenstion.swift */; };
+		EE0366BF2A1C4A7800F5C155 /* UITextViewExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0366BE2A1C4A7800F5C155 /* UITextViewExtention.swift */; };
+		EE0366C22A1C4B0100F5C155 /* UITextFieldExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0366C12A1C4B0100F5C155 /* UITextFieldExtention.swift */; };
 		EE17E77929E4513200F4DA6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E77829E4513200F4DA6D /* AppDelegate.swift */; };
 		EE17E77B29E4513200F4DA6D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E77A29E4513200F4DA6D /* SceneDelegate.swift */; };
 		EE17E77D29E4513200F4DA6D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E77C29E4513200F4DA6D /* LoginViewController.swift */; };
@@ -27,6 +30,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EE0366BC2A1C4A5100F5C155 /* DateExtenstion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtenstion.swift; sourceTree = "<group>"; };
+		EE0366BE2A1C4A7800F5C155 /* UITextViewExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewExtention.swift; sourceTree = "<group>"; };
+		EE0366C12A1C4B0100F5C155 /* UITextFieldExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldExtention.swift; sourceTree = "<group>"; };
 		EE17E77529E4513200F4DA6D /* ToDoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE17E77829E4513200F4DA6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EE17E77A29E4513200F4DA6D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +65,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EE0366C02A1C4ADC00F5C155 /* Extention */ = {
+			isa = PBXGroup;
+			children = (
+				EE0366BC2A1C4A5100F5C155 /* DateExtenstion.swift */,
+				EE0366BE2A1C4A7800F5C155 /* UITextViewExtention.swift */,
+				EE0366C12A1C4B0100F5C155 /* UITextFieldExtention.swift */,
+			);
+			path = Extention;
+			sourceTree = "<group>";
+		};
 		EE17E76C29E4513200F4DA6D = {
 			isa = PBXGroup;
 			children = (
@@ -80,6 +96,7 @@
 			children = (
 				EE17E77829E4513200F4DA6D /* AppDelegate.swift */,
 				EE17E77A29E4513200F4DA6D /* SceneDelegate.swift */,
+				EE0366C02A1C4ADC00F5C155 /* Extention */,
 				EE94DAF929FFDDA30002D46F /* Helpers */,
 				EE17E79829E57ECB00F4DA6D /* Models */,
 				EE17E79429E578AB00F4DA6D /* View */,
@@ -207,7 +224,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE0366BF2A1C4A7800F5C155 /* UITextViewExtention.swift in Sources */,
+				EE0366BD2A1C4A5100F5C155 /* DateExtenstion.swift in Sources */,
 				EE51D0D92A03271F00B12CDC /* PaddingLabel.swift in Sources */,
+				EE0366C22A1C4B0100F5C155 /* UITextFieldExtention.swift in Sources */,
 				EE17E77D29E4513200F4DA6D /* LoginViewController.swift in Sources */,
 				EE17E79329E578A400F4DA6D /* RegisterViewController.swift in Sources */,
 				EEB362802A126E42002B7CD4 /* CoreDataManager.swift in Sources */,
