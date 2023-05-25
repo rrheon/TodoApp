@@ -69,7 +69,6 @@ final class AddItemViewController: UIViewController, UIScrollViewDelegate {
     return tv
   }()
   
-  
   var priorityChoice: UISegmentedControl = {
     let items = PriorityOptions.allCases.map { $0.rawValue }
     let segmentedControl = UISegmentedControl(items: items)
@@ -77,7 +76,6 @@ final class AddItemViewController: UIViewController, UIScrollViewDelegate {
     segmentedControl.selectedSegmentTintColor = Color.priority.uiColor
     return segmentedControl
   }()
-  
   
   var deadLineDatePicker: UIDatePicker = {
     let picker = UIDatePicker()
@@ -233,9 +231,10 @@ extension AddItemViewController {
   
   // MARK: - 셀 추가 및 수정
   @objc func addItem() {
-    guard let title = nonEmpty(titleTextView.text) else {
+    guard let title = UITextView().nonEmpty(titleTextView.text),
+          let memo = UITextView().nonEmpty(memoTextView.text) else {
       let alert = UIAlertController(title: "Error",
-                                    message: "Please enter a title",
+                                    message: "Please enter some info",
                                     preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
       present(alert, animated: true, completion: nil)
@@ -246,7 +245,7 @@ extension AddItemViewController {
       // 기존의 아이템 수정
       toDoManager.updateToDo(existingToDoData: item,
                              title: title,
-                             memo: memoTextView.text,
+                             memo: memo,
                              date: Date().convertDateToString(date: deadLineDatePicker.date),
                              isCompleted: completedSwitch.isOn,
                              priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue){
@@ -256,7 +255,7 @@ extension AddItemViewController {
     } else {
       // 아이템 추가
       toDoManager.saveToDoData(title: title,
-                               memo: memoTextView.text,
+                               memo: memo,
                                date: Date().convertDateToString(date: deadLineDatePicker.date),
                                isCompleted: completedSwitch.isOn,
                                priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue) {
@@ -275,16 +274,6 @@ extension AddItemViewController {
         }
       }
     }
-  }
-
-  // MARK: - 문자열 비었는지 확인
-  func nonEmpty(_ str: String) -> String? {
-    if str.isEmpty { return nil }
-    return str
-  }
-  
-  func nonEmptyTextView(_ tv: UITextView) -> String? {
-    return nonEmpty(tv.text)
   }
 }
 

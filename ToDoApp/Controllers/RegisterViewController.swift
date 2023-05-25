@@ -133,7 +133,6 @@ final class RegisterViewController: UIViewController {
     self.present(navController, animated: true, completion: nil)
   }
   
-  
   @objc func registerButtonTapped(){
     let alert = UIAlertController(title: "등록하기",
                                   message: "계정을 등록하시겠습니까?",

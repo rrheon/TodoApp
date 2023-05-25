@@ -14,4 +14,10 @@ extension UITextView {
     self.sizeToFit()
     self.isScrollEnabled = false
   }
+  
+  // MARK: - 문자열 비었는지 확인
+  func nonEmpty(_ str: String) -> String? {
+    if str.isEmpty { return nil }
+    return str
+  }
 }
