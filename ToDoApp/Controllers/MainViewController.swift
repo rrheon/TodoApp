@@ -13,6 +13,8 @@ protocol AddItemDelegate: AnyObject {
 final class MainViewController: UIViewController, AddItemDelegate {
   let toDoManager = CoreDataManager.shared
   var toDoData: [ToDoData] = []
+  var notCompletedToDoList: [ToDoData] = []
+  var completedToDoList: [ToDoData] = []
   
   private let sections: [String] = ["해야할 것", "Completed"]
   
@@ -43,15 +45,14 @@ final class MainViewController: UIViewController, AddItemDelegate {
     super.viewWillAppear(animated)
     
     // 코어 데이터에서 데이터 가져오기
-    toDoData = toDoManager.getToDoList()
-    tableView.reloadData()
+    updateItemStatus()
   }
-
+  
 }
 
 // MARK: - 메서드 설정
 extension MainViewController {
- 
+  
   // MARK: - TableView Layout 설정
   func setTableVeiwLayout(){
     tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
@@ -74,8 +75,13 @@ extension MainViewController {
   }
   
   func updateItemStatus() {
-    toDoData = toDoManager.getToDoList()
-    tableView.reloadData()
+    do {
+      toDoData = try toDoManager.getToDoList()
+      loadAndFilterData()
+      tableView.reloadData()
+    } catch let error {
+      print("Error updating item status: \(error)")
+    }
   }
   
   @objc private func goToLoginVC() {
@@ -88,6 +94,17 @@ extension MainViewController {
     self.navigationController?.pushViewController(addItemVC, animated: true)
     addItemVC.delegate = self
   }
+  
+  func loadAndFilterData() {
+    do {
+      let allToDoList = try toDoManager.getToDoList()
+      notCompletedToDoList = allToDoList.filter { $0.isCompleted == false }
+      completedToDoList = allToDoList.filter { $0.isCompleted == true }
+    } catch let error {
+      print("Error loading and filtering data: \(error)")
+    }
+  }
+  
 }
 
 // MARK: - tableView custom
@@ -96,13 +113,14 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
                  numberOfRowsInSection section: Int) -> Int {
     if section == 0 {
       // 해야할 것 섹션에는 isCompleted가 false인 데이터만 표시.
-      return toDoManager.getToDoList().filter{ $0.isCompleted == false }.count
+      return notCompletedToDoList.count
     } else if section == 1 {
       // Completed 섹션에는 isCompleted가 true인 데이터만 표시.
-      return toDoManager.getToDoList().filter{ $0.isCompleted == true }.count
+      return completedToDoList.count
     }
     return 0
   }
+  
   
   // MARK: -  cell에 데이터 전달
   func tableView(_ tableView: UITableView,
@@ -113,7 +131,6 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     // 반환할 작업 목록 선택
     let item = toDoItemForIndexPath(indexPath)
-    
     cell.toDoData = item
     cell.selectionStyle = .none
     
@@ -133,29 +150,26 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   // MARK: - 왼쪽으로 스와이프하여 기존의 cell 삭제
-  func tableView(_ tableView: UITableView,
-                 trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath
-  )-> UISwipeActionsConfiguration? {
-    let deleteAction = UIContextualAction(style: .destructive,
-                                          title: "삭제") { (action, view, completion) in
+  func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] (action, view, completionHandler) in
+      guard let self = self else { return completionHandler(false) }
       
       let item = self.toDoItemForIndexPath(indexPath)
-      self.toDoManager.deleteToDo(data: item) { [weak self] in
-        
-        DispatchQueue.main.async { // 메인 스레드에서 실행
-          self?.updateItemStatus()
-        }
-        if let strongSelf = self {
-          strongSelf.tableView.deleteRows(at: [indexPath], with: .fade)
-          completion(true)
+      self.toDoManager.deleteToDo(data: item) {
+        DispatchQueue.main.async {
+          self.loadAndFilterData()
+          tableView.reloadData()
+          completionHandler(true)
         }
       }
     }
+    
     let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction])
     swipeConfiguration.performsFirstActionWithFullSwipe = false
     
     return swipeConfiguration
   }
+  
   // MARK: - 오른쪽으로 스와이프하여 check 활성화
   func tableView(_ tableView: UITableView,
                  leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath
@@ -163,14 +177,15 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     let item = toDoItemForIndexPath(indexPath)
     let isCompleted = item.isCompleted ? false : true
-    let completedStatus = UIContextualAction(style: .normal,
-                                             title: isCompleted ?
-                                             "completed" : "cancel") { action, view, success in
-      self.toDoManager.updateToDoCompleted(existingToDoData: item,
-                                           isCompleted: isCompleted) {
-        self.updateItemStatus()
+    let completedStatus = UIContextualAction(
+      style: .normal,
+      title: isCompleted ? "completed" : "cancel") { action, view, success in
+        self.toDoManager.updateToDoCompleted(
+          existingToDoData: item,
+          isCompleted: isCompleted){ DispatchQueue.main.async{
+            self.updateItemStatus()}
+          }
       }
-    }
     completedStatus.backgroundColor = item.isCompleted ? .red : .green
     
     let swipeConfiguration = UISwipeActionsConfiguration(actions: [completedStatus])
@@ -190,10 +205,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
   func toDoItemForIndexPath(_ indexPath: IndexPath) -> ToDoData {
     let item: ToDoData
     if indexPath.section == 0 {
-      item = self.toDoManager.getToDoList().filter{ $0.isCompleted == false }[indexPath.row]
+      item = notCompletedToDoList[indexPath.row]
     } else {
-      item = self.toDoManager.getToDoList().filter{ $0.isCompleted == true }[indexPath.row]
+      item = completedToDoList[indexPath.row]
     }
     return item
   }
+  
 }

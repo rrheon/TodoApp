@@ -10,6 +10,8 @@
 		EE0366BD2A1C4A5100F5C155 /* DateExtenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0366BC2A1C4A5100F5C155 /* DateExtenstion.swift */; };
 		EE0366BF2A1C4A7800F5C155 /* UITextViewExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0366BE2A1C4A7800F5C155 /* UITextViewExtention.swift */; };
 		EE0366C22A1C4B0100F5C155 /* UITextFieldExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0366C12A1C4B0100F5C155 /* UITextFieldExtention.swift */; };
+		EE0366C42A24B38800F5C155 /* StringExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0366C32A24B38800F5C155 /* StringExtention.swift */; };
+		EE0366C62A24B4A700F5C155 /* UIColorExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE0366C52A24B4A700F5C155 /* UIColorExtention.swift */; };
 		EE17E77929E4513200F4DA6D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E77829E4513200F4DA6D /* AppDelegate.swift */; };
 		EE17E77B29E4513200F4DA6D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E77A29E4513200F4DA6D /* SceneDelegate.swift */; };
 		EE17E77D29E4513200F4DA6D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E77C29E4513200F4DA6D /* LoginViewController.swift */; };
@@ -20,7 +22,6 @@
 		EE17E79329E578A400F4DA6D /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E79229E578A400F4DA6D /* RegisterViewController.swift */; };
 		EE17E79629E57C0D00F4DA6D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE17E79529E57C0D00F4DA6D /* MainViewController.swift */; };
 		EE51D0D92A03271F00B12CDC /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE51D0D82A03271F00B12CDC /* PaddingLabel.swift */; };
-		EE94DAFB29FFDDB90002D46F /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE94DAFA29FFDDB90002D46F /* Color.swift */; };
 		EE94DAFD29FFF91F0002D46F /* Priority.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE94DAFC29FFF91F0002D46F /* Priority.swift */; };
 		EEAF594029F97856002E5E4E /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAF593F29F97856002E5E4E /* CustomCell.swift */; };
 		EEAF594229F98E69002E5E4E /* AddItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEAF594129F98E69002E5E4E /* AddItemViewController.swift */; };
@@ -33,6 +34,8 @@
 		EE0366BC2A1C4A5100F5C155 /* DateExtenstion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtenstion.swift; sourceTree = "<group>"; };
 		EE0366BE2A1C4A7800F5C155 /* UITextViewExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewExtention.swift; sourceTree = "<group>"; };
 		EE0366C12A1C4B0100F5C155 /* UITextFieldExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldExtention.swift; sourceTree = "<group>"; };
+		EE0366C32A24B38800F5C155 /* StringExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtention.swift; sourceTree = "<group>"; };
+		EE0366C52A24B4A700F5C155 /* UIColorExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtention.swift; sourceTree = "<group>"; };
 		EE17E77529E4513200F4DA6D /* ToDoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE17E77829E4513200F4DA6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EE17E77A29E4513200F4DA6D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -44,7 +47,6 @@
 		EE17E79229E578A400F4DA6D /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		EE17E79529E57C0D00F4DA6D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		EE51D0D82A03271F00B12CDC /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
-		EE94DAFA29FFDDB90002D46F /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		EE94DAFC29FFF91F0002D46F /* Priority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Priority.swift; sourceTree = "<group>"; };
 		EEAF593F29F97856002E5E4E /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 		EEAF594129F98E69002E5E4E /* AddItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemViewController.swift; sourceTree = "<group>"; };
@@ -71,6 +73,8 @@
 				EE0366BC2A1C4A5100F5C155 /* DateExtenstion.swift */,
 				EE0366BE2A1C4A7800F5C155 /* UITextViewExtention.swift */,
 				EE0366C12A1C4B0100F5C155 /* UITextFieldExtention.swift */,
+				EE0366C32A24B38800F5C155 /* StringExtention.swift */,
+				EE0366C52A24B4A700F5C155 /* UIColorExtention.swift */,
 			);
 			path = Extention;
 			sourceTree = "<group>";
@@ -141,7 +145,6 @@
 		EE94DAF929FFDDA30002D46F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				EE94DAFA29FFDDB90002D46F /* Color.swift */,
 				EE51D0D82A03271F00B12CDC /* PaddingLabel.swift */,
 				EE94DAFC29FFF91F0002D46F /* Priority.swift */,
 			);
@@ -225,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE0366BF2A1C4A7800F5C155 /* UITextViewExtention.swift in Sources */,
+				EE0366C42A24B38800F5C155 /* StringExtention.swift in Sources */,
 				EE0366BD2A1C4A5100F5C155 /* DateExtenstion.swift in Sources */,
 				EE51D0D92A03271F00B12CDC /* PaddingLabel.swift in Sources */,
 				EE0366C22A1C4B0100F5C155 /* UITextFieldExtention.swift in Sources */,
@@ -232,7 +236,7 @@
 				EE17E79329E578A400F4DA6D /* RegisterViewController.swift in Sources */,
 				EEB362802A126E42002B7CD4 /* CoreDataManager.swift in Sources */,
 				EE17E77929E4513200F4DA6D /* AppDelegate.swift in Sources */,
-				EE94DAFB29FFDDB90002D46F /* Color.swift in Sources */,
+				EE0366C62A24B4A700F5C155 /* UIColorExtention.swift in Sources */,
 				EEB3627D2A12695F002B7CD4 /* ToDoData+CoreDataProperties.swift in Sources */,
 				EEB3627C2A12695F002B7CD4 /* ToDoData+CoreDataClass.swift in Sources */,
 				EEAF594029F97856002E5E4E /* CustomCell.swift in Sources */,

@@ -47,7 +47,7 @@ final class LoginViewController: UIViewController {
   private lazy var loginButton: UIButton = {
     let btn = UIButton()
     btn.setTitle("LOG IN", for: .normal)
-    btn.backgroundColor = Color.loginButtonBackground.uiColor
+    btn.backgroundColor = UIColor.loginButtonBackground
     btn.layer.cornerRadius = 15
     btn.isEnabled = false
     btn.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
@@ -58,7 +58,7 @@ final class LoginViewController: UIViewController {
     let btn = UIButton()
     btn.setTitle("Sign Up", for: .normal)
     btn.setTitleColor(.black, for: .normal)
-    btn.backgroundColor = Color.registerButtonBackground.uiColor
+    btn.backgroundColor = UIColor.registerButtonBackground
     btn.layer.cornerRadius = 15
     btn.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
     return btn
@@ -82,7 +82,7 @@ final class LoginViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    self.view.backgroundColor = Color.loginScreenBackground.uiColor
+    self.view.backgroundColor = UIColor.loginScreenBackground
     
     setupLayout()
     makeUI()
@@ -208,11 +208,11 @@ extension LoginViewController {
     guard
       let email = emailTextField.text, !email.isEmpty,
       let password = passwordTextField.text, !password.isEmpty else {
-      loginButton.backgroundColor = Color.loginButtonBackground.uiColor
+      loginButton.backgroundColor = UIColor.loginButtonBackground
       loginButton.isEnabled = false
       return
     }
-    loginButton.backgroundColor = Color.loginButtonActiveBackground.uiColor
+    loginButton.backgroundColor = UIColor.loginButtonActiveBackground
     loginButton.isEnabled = true
   }
   

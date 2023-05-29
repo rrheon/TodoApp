@@ -86,7 +86,7 @@ final class CustomCell: UITableViewCell {
   }
   
   // MARK: - cell에 데이터 전달
-  func configureUIwithData() {
+  private func configureUIwithData() {
     priorityLabel.text = toDoData?.priority
     deadlineLabel.text = toDoData?.date
     titleLabel.text = toDoData?.title

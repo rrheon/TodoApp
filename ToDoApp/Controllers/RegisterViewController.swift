@@ -46,7 +46,7 @@ final class RegisterViewController: UIViewController {
   private lazy var signUpButton: UIButton = {
     let btn = UIButton()
     btn.setTitle("SIGN UP", for: .normal)
-    btn.backgroundColor = Color.loginButtonBackground.uiColor
+    btn.backgroundColor = UIColor.loginButtonBackground
     btn.layer.cornerRadius = 15
     btn.addTarget(self,
                   action: #selector(registerButtonTapped),
@@ -58,7 +58,7 @@ final class RegisterViewController: UIViewController {
   private lazy var loginButton: UIButton = {
     let btn = UIButton()
     btn.setTitle("LOG IN", for: .normal)
-    btn.backgroundColor = Color.loginButtonBackground.uiColor
+    btn.backgroundColor = UIColor.loginButtonBackground
     btn.layer.cornerRadius = 15
     btn.addTarget(self,
                   action: #selector(loginButtonTapped),
@@ -69,7 +69,7 @@ final class RegisterViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.view.backgroundColor = Color.loginScreenBackground.uiColor
+    self.view.backgroundColor = UIColor.loginScreenBackground
     
     setupLayout()
     makeUI()
@@ -150,6 +150,5 @@ final class RegisterViewController: UIViewController {
     present(alert, animated: true, completion: nil)
     
   }
-  
   
 }

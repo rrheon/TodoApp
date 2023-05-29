@@ -2,7 +2,7 @@ import UIKit
 
 import SnapKit
 
-final class AddItemViewController: UIViewController, UIScrollViewDelegate {
+final class AddItemViewController: UIViewController {
   weak var delegate: AddItemDelegate?
   var itemToEdit: ToDoData?
   
@@ -52,7 +52,7 @@ final class AddItemViewController: UIViewController, UIScrollViewDelegate {
   
   private lazy var completedSwitch: UISwitch = {
     let sw = UISwitch()
-    sw.onTintColor = Color.priority.uiColor
+    sw.onTintColor = UIColor.priority
     return sw
   }()
   
@@ -73,7 +73,7 @@ final class AddItemViewController: UIViewController, UIScrollViewDelegate {
     let items = PriorityOptions.allCases.map { $0.rawValue }
     let segmentedControl = UISegmentedControl(items: items)
     segmentedControl.selectedSegmentIndex = 0
-    segmentedControl.selectedSegmentTintColor = Color.priority.uiColor
+    segmentedControl.selectedSegmentTintColor = UIColor.priority
     return segmentedControl
   }()
   
@@ -208,72 +208,61 @@ final class AddItemViewController: UIViewController, UIScrollViewDelegate {
 extension AddItemViewController {
   // MARK: - 기존 데이터 확인
   func checkData() {
-    if let itemToEdit = itemToEdit {
-      titleTextView.textColor = .black
-      memoTextView.textColor = .black
-      titleTextView.text = itemToEdit.title
-      memoTextView.text = itemToEdit.memo
-      
-      let datestring = itemToEdit.date
-      let dateFormatter = DateFormatter()
-      dateFormatter.dateFormat = "yyyy-MM-dd"
-      if let date = dateFormatter.date(from: datestring ?? "") {
-        deadLineDatePicker.date = date
-      }
-      
-      if let priorityOption = PriorityOptions(rawValue: itemToEdit.priority!) {
-        let selectedIndex = PriorityOptions.allCases.firstIndex(of: priorityOption) ?? 0
-        priorityChoice.selectedSegmentIndex = selectedIndex
-      }
-      completedSwitch.isOn = itemToEdit.isCompleted
+    guard let itemToEdit = itemToEdit else { return }
+    
+    titleTextView.textColor = .black
+    memoTextView.textColor = .black
+    titleTextView.text = itemToEdit.title
+    memoTextView.text = itemToEdit.memo
+    
+    let datestring = itemToEdit.date
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    if let date = dateFormatter.date(from: datestring ?? "") { deadLineDatePicker.date = date }
+    
+    if let priorityOption = PriorityOptions(rawValue: itemToEdit.priority!) {
+      let selectedIndex = PriorityOptions.allCases.firstIndex(of: priorityOption) ?? 0
+      priorityChoice.selectedSegmentIndex = selectedIndex
     }
+    
+    completedSwitch.isOn = itemToEdit.isCompleted
   }
+
   
   // MARK: - 셀 추가 및 수정
   @objc func addItem() {
-    guard let title = UITextView().nonEmpty(titleTextView.text),
-          let memo = UITextView().nonEmpty(memoTextView.text) else {
-      let alert = UIAlertController(title: "Error",
-                                    message: "Please enter some info",
-                                    preferredStyle: .alert)
+    guard let title = titleTextView.text.nonEmpty,
+          let memo = memoTextView.text.nonEmpty else {
+      let alert = UIAlertController(
+        title: "Error",
+        message: "Please enter some info",
+        preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
       present(alert, animated: true, completion: nil)
       return
     }
     
     if let item = itemToEdit {
-      // 기존의 아이템 수정
-      toDoManager.updateToDo(existingToDoData: item,
-                             title: title,
-                             memo: memo,
-                             date: Date().convertDateToString(date: deadLineDatePicker.date),
-                             isCompleted: completedSwitch.isOn,
-                             priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue){
-        self.doneButtonClicked()
+      toDoManager.updateToDo(
+        existingToDoData: item,
+        title: title,
+        memo: memo,
+        date: Date.toString(deadLineDatePicker.date)(),
+        isCompleted: completedSwitch.isOn,
+        priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue){
       }
-      
     } else {
       // 아이템 추가
-      toDoManager.saveToDoData(title: title,
-                               memo: memo,
-                               date: Date().convertDateToString(date: deadLineDatePicker.date),
-                               isCompleted: completedSwitch.isOn,
-                               priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue) {
-        self.doneButtonClicked()
+      toDoManager.saveToDoData(
+        title: title,
+        memo: memo,
+        date: Date.toString(deadLineDatePicker.date)(),
+        isCompleted: completedSwitch.isOn,
+        priority: PriorityOptions.allCases[priorityChoice.selectedSegmentIndex].rawValue) {
       }
     }
-  }
-  
-  // MARK: - mainview로 이동하는 함수
-  @objc func doneButtonClicked() {
-    if let viewControllers = navigationController?.viewControllers {
-      for vc in viewControllers {
-        if let mainVC = vc as? MainViewController {
-          navigationController?.popToViewController(mainVC, animated: true)
-          break
-        }
-      }
-    }
+    navigationController?.popViewController(animated: true)
+
   }
 }
 
