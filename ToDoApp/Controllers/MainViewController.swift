@@ -60,12 +60,12 @@ extension MainViewController {
   
   // MARK: - navigationbar 설정
   func setNavigationbar(){
-    navigationItem.leftBarButtonItem = UIBarButtonItem(
-      title: "Log out",
-      style: .plain,
-      target: self,
-      action: #selector(goToLoginVC)
-    )
+//    navigationItem.leftBarButtonItem = UIBarButtonItem(
+//      title: "Log out",
+//      style: .plain,
+//      target: self,
+//      action: #selector()
+//    )
     navigationItem.rightBarButtonItem = UIBarButtonItem(
       image: UIImage(systemName: "plus"),
       style: .plain,
@@ -82,11 +82,6 @@ extension MainViewController {
     } catch let error {
       print("Error updating item status: \(error)")
     }
-  }
-  
-  @objc private func goToLoginVC() {
-    let loginVC = LoginViewController()
-    self.navigationController?.pushViewController(loginVC, animated: true)
   }
   
   @objc private func addTableView() {
@@ -150,8 +145,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   // MARK: - 왼쪽으로 스와이프하여 기존의 cell 삭제
-  func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-    let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] (action, view, completionHandler) in
+  func tableView(_ tableView: UITableView,
+                 trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    let deleteAction = UIContextualAction(style: .destructive,
+                                          title: "삭제") { [weak self] (action, view, completionHandler) in
       guard let self = self else { return completionHandler(false) }
       
       let item = self.toDoItemForIndexPath(indexPath)
